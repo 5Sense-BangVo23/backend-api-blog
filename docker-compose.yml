@@ -2,19 +2,21 @@ version: '3'
 
 services:
   blog_app:
+    container_name: blog_app
     build:
       context: .
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile
     ports:
       - "8555:80"
     volumes:
-      - .:/var/www/html
+      - ./src:/var/www/html
     depends_on:
       - blog_db
     networks:
       - blog_connect_network # Connect the blog_app and blog_db containers to the blog_connect_network
 
   blog_db:
+    container_name: blog_db
     image: mysql:latest
     environment:
       MYSQL_DATABASE: blog_db
