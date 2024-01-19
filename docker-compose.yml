@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  blog_app:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - "8555:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - blog_db
+    networks:
+      - blog_connect_network # Connect the blog_app and blog_db containers to the blog_connect_network
+
+  blog_db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: blog_db
+      MYSQL_USER: random
+      MYSQL_PASSWORD: takemyhand
+      MYSQL_ROOT_PASSWORD: takemyhand
+    ports:
+      - "3500:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - blog_connect_network # Connect the blog_db container to the blog_connect_network
+    
+networks:
+  blog_connect_network:
+    driver: bridge  # Use bridge driver to create local network (local bridge network)
+
