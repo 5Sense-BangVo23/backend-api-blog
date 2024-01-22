@@ -37,6 +37,17 @@ class AuthenticationController extends Controller
         return response()->json(['info' => 'User logged out successfully']);
     }
 
+    public function getUser($userId)
+    {
+        $user = \User::getUserById($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Custom error message'], 404);
+        }
+
+        return response()->json(['data' => $user], 200);
+    }
+
+
     public function sendMessageInfo(SendMessageRequest $request){
         $msg = $request->message;
         return response()->json($msg);

@@ -17,9 +17,10 @@ use App\Http\Controllers\Api\BlgUserController;
 Route::group([
     'prefix' => 'authentication',
     'controller' => AuthenticationController::class, 
-    'middleware' => [],  // Add any middleware if needed
+    'middleware' => [],  
 ], function () {
     Route::post('/login', [AuthenticationController::class, 'authLogin']);
+    Route::get('/user/{userId}', [AuthenticationController::class, 'getUser'])->middleware(['auth:api']);
     Route::post('/logout', [AuthenticationController::class,'authLogout']);
     Route::post('/send-message', [AuthenticationController::class, 'sendMessageInfo']);
 });
