@@ -20,6 +20,7 @@ Route::group([
     'middleware' => [],  // Add any middleware if needed
 ], function () {
     Route::post('/login', [AuthenticationController::class, 'authLogin']);
+    Route::post('/logout', [AuthenticationController::class,'authLogout']);
     Route::post('/send-message', [AuthenticationController::class, 'sendMessageInfo']);
 });
 

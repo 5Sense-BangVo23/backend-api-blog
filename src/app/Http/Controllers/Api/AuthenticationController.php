@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\LoginRequest;
 use App\Models\BlgUser;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AuthenticationController extends Controller
 {
@@ -25,13 +26,15 @@ class AuthenticationController extends Controller
             $newToken = \JwtUtils::createNewAccessToken($accessToken);
             return response()->json($newToken, 200);
         } else {
-            return response()->json(['info'=>'Please check your login information Password !'], 401);
+            return response()->json(['info'=>'Please check your login information Password !'], 400);
         } 
     }
 
 
-    public function authLogout(){
-
+    public function authLogout()
+    {
+        Auth::logout();
+        return response()->json(['info' => 'User logged out successfully']);
     }
 
     public function sendMessageInfo(SendMessageRequest $request){

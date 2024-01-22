@@ -24,7 +24,7 @@ class BlgUserController extends Controller
     
             $role = BlgRole::where('name', 'ROLE_ADMIN')->first();
             if (!$role) {
-                return response()->json(["error" => "Role not found!"], 400);
+                return response()->json(["error" => "Role not found!"], 404);
             }
     
             $user->roles()->attach($role->id);
