@@ -23,7 +23,6 @@ class BlgUserController extends Controller
             ]);
     
             $role = BlgRole::where('name', 'ROLE_ADMIN')->first();
-            dd($role);
             if (!$role) {
                 return response()->json(["error" => "Role not found!"], 400);
             }
