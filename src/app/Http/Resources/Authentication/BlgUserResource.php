@@ -13,14 +13,14 @@ class BlgUserResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray($request)
-{
-    return [
-        'name' => $this->name,
-        'email' => $this->email,
-        'password' => $this->password,
-        'roles' => $this->roles, 
-        'created_at' => $this->created_at,
-        'updated_at' => $this->updated_at,
-    ];
-}
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+            'roles' => $this->roles, 
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+    }
 }
