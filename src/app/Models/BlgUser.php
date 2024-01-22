@@ -49,8 +49,6 @@ class BlgUser extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(BlgRole::class, 'blg_roles_users', 'blg_user_id', 'blg_role_id');
     }
-
-
      /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

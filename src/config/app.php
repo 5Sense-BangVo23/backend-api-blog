@@ -190,7 +190,7 @@ return [
 
          // Services
          'JwtUtils' => App\Facades\JwtFacade::class,
-         
+         'User' => App\Facades\BlgUserFacade::class,
     ])->toArray(),
 
     'asset_function' => 'asset',

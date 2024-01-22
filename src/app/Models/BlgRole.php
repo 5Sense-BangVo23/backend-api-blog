@@ -11,6 +11,12 @@ class BlgRole extends Model
 
     protected $table = 'blg_roles';
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+    ];
+
     public function users()
     {
         return $this->belongsToMany(BlgUser::class, 'blg_roles_users', 'blg_role_id', 'blg_user_id');
