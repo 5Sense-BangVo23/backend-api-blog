@@ -20,4 +20,4 @@ Personal Blog
 
 ## Init Data
 
-- php artisan db:seed --class=BlgRoleSeeder 
+- php artisan db:seed --class=BlgRoleSeeder , BlgUserSeeder

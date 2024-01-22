@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $this->app->bind('JwtService', JwtService::class);
+        $this->app->bind('BlgUserService', BlgUserService::class);
     }
 
     /**
