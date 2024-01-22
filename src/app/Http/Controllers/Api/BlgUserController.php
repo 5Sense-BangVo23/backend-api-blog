@@ -12,33 +12,29 @@ use App\Http\Resources\Authentication\BlgUserResource;
 class BlgUserController extends Controller
 {
     //
-    public function authRegister(RegisterRequest $request){
-        try {
-            $validatedData = $request->validated();
-    
-            $user = BlgUser::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password'])
-            ]);
-    
-            $role = BlgRole::where('name', 'ROLE_ADMIN')->first();
-            if (!$role) {
-                return response()->json(["error" => "Role not found!"], 404);
-            }
-    
-            $user->roles()->attach($role->id);
-    
-            // Use the BlgUserResource to format the response
-            $userResource = new BlgUserResource($user);
-    
+    public function authRegister(RegisterRequest $request)
+    {
+        $validatedData = $request->validated();
+        $result = \User::createUser(
+            $validatedData['name'],
+            $validatedData['email'],
+            $validatedData['password']
+        );
+
+        if ($result['success']) {
+            $userResource = new BlgUserResource($result['user']);
+
             return response()->json([
                 'success' => true,
                 'message' => 'User registration successful',
-                'data' => $userResource, // Use the resource instance
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'User registration failed', 'message' => $e->getMessage()], 500);
+                'data' => $userResource,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User registration failed',
+                'error' => $result['message'],
+            ], 500);
         }
     }
 

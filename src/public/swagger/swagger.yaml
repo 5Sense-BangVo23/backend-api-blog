@@ -229,7 +229,7 @@ paths:
         - token: [ ]
   
 
-  /user/register:
+  /users/register:
     post:
       tags:
         - User Management

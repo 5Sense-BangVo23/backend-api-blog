@@ -1,32 +1,34 @@
 <?php
 namespace App\Services;
 use App\Models\BlgUser;
+use App\Models\BlgRole;
 use App\Traits\Loggable;
+use Illuminate\Support\Facades\Hash;
 use App\Traits\BlgUserTrait;
 
 class BlgUserService{
 
     use Loggable,BlgUserTrait;
 
-    protected function getUserIdByRole($roleName)
-    {
-        $userId = BlgUser::whereHas('roles', function ($query) use ($roleName) {
-            $query->where('name', $roleName);
-        })->pluck('id')->first();
-
-        $this->logMessage("User ID: ".$userId);
-
-        return $userId;
-    }
-
-    public function getAllUsers()
+    public function createUser($name, $email, $password)
     {
         try {
-            $users = BlgUser::all();
-            $this->logMessage("Loaded all user");
-            return $users;
+            $user = BlgUser::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make($password)
+            ]);
+
+            $role = BlgRole::where('name', 'ROLE_ADMIN')->first();
+            if (!$role) {
+                return ['success' => false, 'message' => 'Role not found!'];
+            }
+
+            $user->roles()->attach($role->id);
+
+            return ['success' => true, 'user' => $user];
         } catch (\Exception $e) {
-            throw $e;
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 }
