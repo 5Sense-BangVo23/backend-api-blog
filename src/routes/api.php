@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\BlgUserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,11 +16,24 @@ use App\Http\Controllers\Api\AuthenticationController;
 */
 Route::group([
     'prefix' => 'authentication',
-    'controller' => AuthenticationController::class,
-], function ($router) {
-    Route::post('/register', 'authRegister');
-    Route::post('/login', 'login');
-    Route::post('/send-message','sendMessageInfo');
+    'controller' => AuthenticationController::class, 
+    'middleware' => [],  // Add any middleware if needed
+], function () {
+    Route::post('/login', [AuthenticationController::class, 'authLogin']);
+    Route::post('/send-message', [AuthenticationController::class, 'sendMessageInfo']);
 });
 
 
+// User management routes
+
+Route::group([
+    'prefix' => 'users',
+    'controller' => BlgUserController::class,
+    'middleware' => ['auth:api', 'checkRoleAdmin']
+], function ($router) {
+    Route::post('/register', [BlgUserController::class, 'authRegister']);
+    Route::get('/', [BlgUserController::class, 'index']);
+    Route::get('/{id}', [BlgUserController::class, 'show']);
+    Route::put('/{id}', [BlgUserController::class, 'update']);
+    Route::delete('/{id}', [BlgUserController::class, 'destroy']);
+});

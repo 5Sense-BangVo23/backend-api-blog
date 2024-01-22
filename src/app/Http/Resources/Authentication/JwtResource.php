@@ -15,7 +15,7 @@ class JwtResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'accessToken' =>  $this->resource,
+            'accessToken' =>$this->resource,
             'tokenType' => 'bearer',
             'expiresInMs' => auth('api')->factory()->getTTL() * 60 * 24,
         ];

@@ -5,39 +5,30 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\SendMessageRequest;
-
-use App\Http\Requests\RegisterRequest;
-use App\Models\BlgUser;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\LoginRequest;
+use App\Models\BlgUser;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationController extends Controller
 {
 
-    public function authLogin(){
-
-    }
-
-    public function authRegister(RegisterRequest $request){
-        try{
-            $validatedData = $request->validated();
-
-            $user = BlgUser::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password'])
-            ]);
-    
-            return response()->json([
-                'message' => 'Successfully created user!',
-                'user info' => $user
-            ], 200);
-
-        }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+    public function authLogin(LoginRequest $request){
+        $userEmail = BlgUser::where(['email' => $request->email])->first();
+        if(!$userEmail){
+            return response()->json(['info' => 'Please check your input information again Email !',404]);
         }
-        
-
+        $userPassword = $userEmail->password; 
+        $hashedPassword = \JwtUtils::generateHashedPassword($request->password);
+        if (Hash::check($request->password, $userPassword)) {
+            $accessToken = JWTAuth::fromUser($userEmail);
+            $newToken = \JwtUtils::createNewAccessToken($accessToken);
+            return response()->json($newToken, 200);
+        } else {
+            return response()->json(['info'=>'Please check your login information Password !'], 401);
+        } 
     }
+
 
     public function authLogout(){
 
@@ -47,6 +38,5 @@ class AuthenticationController extends Controller
         $msg = $request->message;
         return response()->json($msg);
     }
-
 
 }
