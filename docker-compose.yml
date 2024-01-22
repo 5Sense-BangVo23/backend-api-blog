@@ -14,7 +14,7 @@ services:
       - blog_db
     networks:
       - blog_connect_network # Connect the blog_app and blog_db containers to the blog_connect_network
-
+    
   blog_db:
     container_name: blog_db
     image: mysql:latest
@@ -26,7 +26,7 @@ services:
     ports:
       - "3500:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - mysql_data_blog:/var/lib/mysql
     networks:
       - blog_connect_network # Connect the blog_db container to the blog_connect_network
     
@@ -34,3 +34,5 @@ networks:
   blog_connect_network:
     driver: bridge  # Use bridge driver to create local network (local bridge network)
 
+volumes:
+  mysql_data_blog:

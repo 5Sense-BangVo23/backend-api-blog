@@ -14,8 +14,9 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        // 'guard' => 'web',
+        'guard' => 'api',
+        'passwords' => 'blg_users',
     ],
 
     /*
@@ -38,8 +39,13 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'blg_users',
         ],
+        'api' =>[
+            'driver' => 'jwt',
+            'provider' => 'blg_users',
+            'hash' => false,
+        ]
     ],
 
     /*
@@ -60,9 +66,9 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'blg_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\BlgUser::class,
         ],
 
         // 'users' => [
@@ -91,8 +97,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'blg_users' => [
+            'provider' => 'blg_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

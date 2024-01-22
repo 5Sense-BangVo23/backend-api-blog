@@ -17,3 +17,7 @@ Personal Blog
 ## Execute: php artisan 
 
 - Create data from initialization data:  php artisan migrate  
+
+## Init Data
+
+- php artisan db:seed --class=BlgRoleSeeder , BlgUserSeeder
