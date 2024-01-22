@@ -187,6 +187,10 @@ return [
         // 'Example' => App\Facades\Example::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+
+         // Services
+         'JwtUtils' => App\Facades\JwtFacade::class,
+         
     ])->toArray(),
 
     'asset_function' => 'asset',
