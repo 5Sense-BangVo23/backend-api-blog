@@ -10,25 +10,38 @@ use App\Http\Requests\LoginRequest;
 use App\Models\BlgUser;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LoginNotification;
 
 class AuthenticationController extends Controller
 {
 
-    public function authLogin(LoginRequest $request){
+    public function authLogin(LoginRequest $request)
+    {
         $userEmail = BlgUser::where(['email' => $request->email])->first();
-        if(!$userEmail){
-            return response()->json(['info' => 'Please check your input information again Email !',404]);
+    
+        if (!$userEmail) {
+            return response()->json(['info' => 'Please check your input information again Email !'], 404);
         }
-        $userPassword = $userEmail->password; 
+    
+        $userPassword = $userEmail->password;
         $hashedPassword = \JwtUtils::generateHashedPassword($request->password);
+    
         if (Hash::check($request->password, $userPassword)) {
             $accessToken = JWTAuth::fromUser($userEmail);
-            $newToken = \JwtUtils::createNewAccessToken($accessToken);
-            return response()->json($newToken, 200);
+            $newAccessToken = \JwtUtils::createNewAccessToken($accessToken);
+            $userEmail->update(['remember_token' => $accessToken]);
+            try {
+                Mail::to($userEmail->email)->send(new LoginNotification($userEmail, now()));
+                return response()->json($newAccessToken, 200);
+            } catch (\Exception $e) {
+                \Log::error('Error sending login notification: ' . $e->getMessage());
+            }
+            
         } else {
-            return response()->json(['info'=>'Please check your login information Password !'], 400);
-        } 
-    }
+            return response()->json(['info' => 'Please check your login information Password !'], 400);
+        }
+    }  
 
 
     public function authLogout()
@@ -41,7 +54,7 @@ class AuthenticationController extends Controller
     {
         $user = \User::getUserById($userId);
         if (!$user) {
-            return response()->json(['error' => 'Custom error message'], 404);
+            return response()->json(['error' => 'ID: '. $userId .' not found !'], 404);
         }
 
         return response()->json(['data' => $user], 200);
