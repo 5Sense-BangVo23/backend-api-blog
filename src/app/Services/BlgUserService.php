@@ -5,7 +5,9 @@ use App\Models\BlgRole;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailer;
 use App\Mail\PasswordResetMail;
+use App\Mail\RegistrationUserMail;
 use App\Traits\Loggable;
 use App\Traits\BlgUserTrait;
 
@@ -13,6 +15,13 @@ class BlgUserService{
 
     use Loggable,BlgUserTrait;
 
+    protected $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+    
     public function createUser($name, $email, $password)
     {
         try {
@@ -41,6 +50,19 @@ class BlgUserService{
 
             // Return an error response
             return ['success' => false, 'message' => 'Error creating user'];
+        }
+    }
+
+    public function sendRegistrationEmail($user)
+    {
+        try {
+            $this->mailer->to($user->email)->send(new RegistrationUserMail($user));
+
+            return ['success' => true, 'user' => $user];
+        } catch (\Exception $e) {
+            \Log::error('Error sending registration email: ' . $e->getMessage());
+
+            return ['success' => false, 'message' => 'Error sending registration email'];
         }
     }
     

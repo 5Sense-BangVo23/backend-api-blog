@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Services\JwtService;
 use App\Services\BlgUserService;
+use App\Services\BlgAuthorService;
+use App\Services\BlgBookService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,8 @@ class AppServiceProvider extends ServiceProvider
         //
         $this->app->bind('JwtService', JwtService::class);
         $this->app->bind('BlgUserService', BlgUserService::class);
+        $this->app->bind('BlgAuthorService', BlgAuthorService::class);
+        $this->app->bind('BlgBookService', BlgBookService::class);
     }
 
     /**
