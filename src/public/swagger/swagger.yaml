@@ -191,6 +191,29 @@ components:
         - full_name
         - age
         - phone_number
+  
+    CreateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Technology"
+        description:
+          type: string
+          example: "Tech-related books"
+      required:
+        - name
+        - description
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Technology"
+        description:
+          type: string
+          example: "Tech-related books"
   securitySchemes:
     token:
       type: http
@@ -560,3 +583,105 @@ paths:
       security:
         - token: []
 
+  /categories/create:
+    post:
+      tags:
+        - Book Categories
+      summary: Create a new category
+      operationId: createCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+            example:
+              name: "Technology"
+              description: "Tech-related books"
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              example:
+                status: 201
+                message: "Category created successfully"
+                data:
+                  name: "Technology"
+                  description: "Tech-related books"
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Bad request - Invalid input"
+                invalidInput:
+                  fields:
+                    - name
+                    - description
+      security:
+        - token: []
+
+  /categories:
+    get:
+      tags:
+        - Book Categories
+      summary: Get all categories
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Categories not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /categories/update/{id}:
+    put:
+      tags:
+        - Book Categories
+      summary: Update category by ID
+      operationId: updateCategoryById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
