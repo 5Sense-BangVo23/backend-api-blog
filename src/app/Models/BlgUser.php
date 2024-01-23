@@ -23,6 +23,7 @@ class BlgUser extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'remember_token',
     ];
 
     /**

@@ -89,7 +89,19 @@ components:
       required:
         - email
         - password
-
+    ResetPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: bangvo.5sense.vn@gmail.com
+        password:
+          type: string
+          example: new_password123
+      required:
+        - email
+        - password
     UserRegistrationRequest:
       type: object
       properties:
@@ -145,7 +157,63 @@ components:
         email:
           type: string
           example: "updateduser@example.com"
+    
+    CreateAuthorRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          example: "Windy Max"
+        age:
+          type: integer
+          example: 25
+        phone_number:
+          type: string
+          example: "1234567890"
+      required:
+        - full_name
+        - age
+        - phone_number
 
+    UpdateAuthorRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          maxLength: 255
+        age:
+          type: integer
+          minimum: 1
+        phone_number:
+          type: string
+          maxLength: 20
+      required:
+        - full_name
+        - age
+        - phone_number
+  
+    CreateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Technology"
+        description:
+          type: string
+          example: "Tech-related books"
+      required:
+        - name
+        - description
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Technology"
+        description:
+          type: string
+          example: "Tech-related books"
   securitySchemes:
     token:
       type: http
@@ -184,7 +252,34 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
-
+  /authentication/user/{id}:
+      get:
+        tags:
+          - Authentication
+        summary: Get user by ID
+        operationId: getUserById
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: User ID
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: User details
+            content:
+              application/json:
+                example:
+                  $ref: '#/components/schemas/ApiResponse'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                example:
+                  $ref: '#/components/schemas/ApiResponse'
+        security:
+          - token: [ ]
   /authentication/logout:
     post:
       tags:
@@ -200,8 +295,9 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - token: [ ]
+  
 
-  /user/register:
+  /users/register:
     post:
       tags:
         - User Management
@@ -251,33 +347,9 @@ paths:
       security:
         - token: [ ]
 
-  /user/{id}:
-    get:
-      tags:
-        - User Management
-      summary: Get user by ID
-      operationId: getUserById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: User ID
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: User details
-          content:
-            application/json:
-              example:
-                $ref: '#/components/schemas/ApiResponse'
-        '404':
-          description: User not found
-          content:
-            application/json:
-              example:
-                $ref: '#/components/schemas/ApiResponse'
+    
 
+  /users/update/{id}:
     put:
       tags:
         - User Management
@@ -315,7 +387,53 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: [ ]
 
+  /users/reset-password/{email}:
+    post:
+      tags:
+        - User Management
+      summary: Reset password and send email
+      operationId: resetPasswordAndSendEmail
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: User's email
+          schema:
+            type: string
+            format: email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset email sent successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: [ ]
+
+
+  /users/delete:
     delete:
       tags:
         - User Management
@@ -341,3 +459,229 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: [ ]
+
+  /authors:
+    get:
+      tags:
+        - Author Management
+      summary: Get all authors
+      operationId: getAllAuthors
+      responses:
+        '200':
+          description: List of authors
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Authors not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: [ ]
+
+  /authors/create:
+    post:
+      tags:
+        - Author Management
+      summary: Create a new author
+      operationId: createAuthor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorRequest'
+            example:
+              full_name: "Windy Max"
+              age: 30
+              phone_number: "1234567890"
+      responses:
+        '201':
+          description: Author created successfully
+          content:
+            application/json:
+              example:
+                status: 200
+                message: "Author created successfully"
+                data:
+                  full_name: "Windy Max"
+                  age: 25
+                  phone_number: "1234567890"
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Bad request - Invalid input"
+                invalidInput:
+                  fields:
+                    - full_name
+                    - age
+                    - phone_number
+      security:
+        - token: []
+  /authors/update/{id}:
+    put:
+      tags:
+        - Author Management
+      summary: Update an existing author
+      operationId: updateAuthor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Author ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthorRequest'
+            example:
+              full_name: "Updated Windy Max"
+              age: 32
+              phone_number: "9876543210"
+      responses:
+        '200':
+          description: Author updated successfully
+          content:
+            application/json:
+              example:
+                status: 200
+                message: "Author updated successfully"
+                data:
+                  full_name: "Updated Windy Max"
+                  age: 32
+                  phone_number: "9876543210"
+        '404':
+          description: Author not found
+          content:
+            application/json:
+              example:
+                status: 404
+                message: "Author not found"
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Bad request - Invalid input"
+                invalidInput:
+                  fields:
+                    - full_name
+                    - age
+                    - phone_number
+      security:
+        - token: []
+
+  /categories/create:
+    post:
+      tags:
+        - Book Categories
+      summary: Create a new category
+      operationId: createCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+            example:
+              name: "Technology"
+              description: "Tech-related books"
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              example:
+                status: 201
+                message: "Category created successfully"
+                data:
+                  name: "Technology"
+                  description: "Tech-related books"
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Bad request - Invalid input"
+                invalidInput:
+                  fields:
+                    - name
+                    - description
+      security:
+        - token: []
+
+  /categories:
+    get:
+      tags:
+        - Book Categories
+      summary: Get all categories
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Categories not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /categories/update/{id}:
+    put:
+      tags:
+        - Book Categories
+      summary: Update category by ID
+      operationId: updateCategoryById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
