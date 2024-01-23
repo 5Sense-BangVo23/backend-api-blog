@@ -193,6 +193,7 @@ return [
          'User' => App\Facades\BlgUserFacade::class,
          'Author' => App\Facades\BlgAuthorFacade::class,
          'Category' => App\Facades\BlgCategoryFacade::class,
+         'Publisher' => App\Facades\BlgPublisherFacade::class,
          'Book' => App\Facades\BlgBookFacade::class,
     ])->toArray(),
 

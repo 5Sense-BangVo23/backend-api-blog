@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BlgUserController;
 use App\Http\Controllers\Api\BlgAuthorController;
+use App\Http\Controllers\Api\BlgPublisherController;
 use App\Http\Controllers\Api\BlgCategoryController;
 /*
 |--------------------------------------------------------------------------
@@ -62,3 +63,14 @@ Route::group([
     Route::get('/', [BlgCategoryController::class, 'getAllCategories'])->middleware(['auth:api']);
     Route::put('/update/{id}', [BlgCategoryController::class, 'updateCategory'])->middleware(['auth:api']);
 });
+
+Route::group([
+    'prefix' => 'publishers',
+    'controller' => BlgPublisherController::class,
+    'middleware' => ['auth:api', 'checkRoleAdmin']
+], function ($router) {
+    Route::post('/create', [BlgPublisherController::class, 'createPublisher'])->middleware(['auth:api']);
+    Route::get('/', [BlgPublisherController::class, 'getAllPublishers'])->middleware(['auth:api']);
+    Route::put('/update/{id}', [BlgPublisherController::class, 'updatePublisher'])->middleware(['auth:api']);
+});
+

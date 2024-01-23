@@ -7,6 +7,7 @@ use App\Services\JwtService;
 use App\Services\BlgUserService;
 use App\Services\BlgAuthorService;
 use App\Services\BlgCategoryService;
+use App\Services\BlgPublisherService;
 use App\Services\BlgBookService;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('BlgUserService', BlgUserService::class);
         $this->app->bind('BlgAuthorService', BlgAuthorService::class);
         $this->app->bind('BlgCategoryService', BlgCategoryService::class);
+        $this->app->bind('BlgPublisherService', BlgPublisherService::class);
         $this->app->bind('BlgBookService', BlgBookService::class);
     }
 

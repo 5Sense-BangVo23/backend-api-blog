@@ -17,7 +17,13 @@ tags:
   - name: Authentication
     description: Login & Register & Logout
   - name: User Management
-    description: Manage users
+    description: Manage Users
+  - name: Author Management
+    description: Manage Authors
+  - name: Book Categories Management
+    description: Manage book categories
+  - name: Publisher Management
+    description: Manage Publishers
 
 components:
   schemas:
@@ -89,6 +95,7 @@ components:
       required:
         - email
         - password
+
     ResetPasswordRequest:
       type: object
       properties:
@@ -102,6 +109,7 @@ components:
       required:
         - email
         - password
+
     UserRegistrationRequest:
       type: object
       properties:
@@ -214,6 +222,35 @@ components:
         description:
           type: string
           example: "Tech-related books"
+
+    CreatePublisherRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Publisher X"
+        address:
+          type: string
+          example: "123 Main Street, City"
+      required:
+        - name
+        - address
+
+    UpdatePublisherRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Publisher X"
+        address:
+          type: string
+          example: "456 New Street, Town"
+      required:
+        - name
+        - address
+
+
+
   securitySchemes:
     token:
       type: http
@@ -252,6 +289,7 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
+  
   /authentication/user/{id}:
       get:
         tags:
@@ -280,6 +318,7 @@ paths:
                   $ref: '#/components/schemas/ApiResponse'
         security:
           - token: [ ]
+  
   /authentication/logout:
     post:
       tags:
@@ -296,7 +335,6 @@ paths:
       security:
         - token: [ ]
   
-
   /users/register:
     post:
       tags:
@@ -346,8 +384,6 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - token: [ ]
-
-    
 
   /users/update/{id}:
     put:
@@ -432,7 +468,6 @@ paths:
       security:
         - token: [ ]
 
-
   /users/delete:
     delete:
       tags:
@@ -500,6 +535,7 @@ paths:
               full_name: "Windy Max"
               age: 30
               phone_number: "1234567890"
+          
       responses:
         '201':
           description: Author created successfully
@@ -526,6 +562,7 @@ paths:
                     - phone_number
       security:
         - token: []
+  
   /authors/update/{id}:
     put:
       tags:
@@ -586,7 +623,7 @@ paths:
   /categories/create:
     post:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Create a new category
       operationId: createCategory
       requestBody:
@@ -626,7 +663,7 @@ paths:
   /categories:
     get:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Get all categories
       operationId: getAllCategories
       responses:
@@ -648,7 +685,7 @@ paths:
   /categories/update/{id}:
     put:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Update category by ID
       operationId: updateCategoryById
       parameters:
@@ -685,3 +722,112 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - token: []
+
+  /publishers/create:
+    post:
+      tags:
+        - Publisher Management
+      summary: Create a new publisher
+      operationId: createPublisher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePublisherRequest'
+            example:
+              name: "Publisher X"
+              address: "123 Main Street, City"
+      responses:
+        '201':
+          description: Publisher created successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /publishers:
+    get:
+      tags:
+        - Publisher Management
+      summary: Get all publishers
+      operationId: getAllPublishers
+      responses:
+        '200':
+          description: List of publishers
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Publishers not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /publishers/update/{id}:
+    put:
+      tags:
+        - Publisher Management
+      summary: Update publisher by ID
+      operationId: updatePublisherById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Publisher ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePublisherRequest'
+      responses:
+        '200':
+          description: Publisher updated successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Publisher not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
