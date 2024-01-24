@@ -21,3 +21,7 @@ Personal Blog
 ## Init Data
 
 - php artisan db:seed --class=BlgRoleSeeder , BlgUserSeeder
+
+## Note
+
+- Copy content of backup.env.txt to .env
