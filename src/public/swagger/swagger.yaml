@@ -17,7 +17,15 @@ tags:
   - name: Authentication
     description: Login & Register & Logout
   - name: User Management
-    description: Manage users
+    description: Manage Users
+  - name: Author Management
+    description: Manage Authors
+  - name: Book Categories Management
+    description: Manage book categories
+  - name: Publisher Management
+    description: Manage Publishers
+  - name: Book Management
+    description: Books Management
 
 components:
   schemas:
@@ -89,6 +97,7 @@ components:
       required:
         - email
         - password
+
     ResetPasswordRequest:
       type: object
       properties:
@@ -102,6 +111,7 @@ components:
       required:
         - email
         - password
+
     UserRegistrationRequest:
       type: object
       properties:
@@ -214,6 +224,121 @@ components:
         description:
           type: string
           example: "Tech-related books"
+
+    CreatePublisherRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Publisher X"
+        address:
+          type: string
+          example: "123 Main Street, City"
+      required:
+        - name
+        - address
+
+    UpdatePublisherRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Publisher X"
+        address:
+          type: string
+          example: "456 New Street, Town"
+      required:
+        - name
+        - address
+
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Sample Book 1"
+        description:
+          type: string
+          example: "This is a sample book"
+        blg_author_id:
+          type: integer
+          example: 1
+        blg_category_id:
+          type: integer
+          example: 1
+        blg_publisher_id:
+          type: integer
+          example: 1
+        publication_status:
+          type: string
+          example: "Draft"
+
+  responses:
+    BookListResponse:
+      description: Successful response for book list
+      content:
+        application/json:
+          example:
+            - id: 1
+              title: "Sample Book 1"
+              description: "This is a sample book"
+              author_id: 1
+              category_id: 1
+              publisher_id: 1
+              publication_status: "Draft"
+              publication_start_date: "2022-01-27T12:00:00Z"
+              publication_end_date: "2022-02-27T12:00:00Z"
+              created_at: "2022-01-23T12:34:56Z"
+              updated_at: "2022-01-23T12:34:56Z"
+            - id: 2
+              title: "Sample Book 2"
+              description: "Another sample book"
+              author_id: 2
+              category_id: 2
+              publisher_id: 2
+              publication_status: "Published"
+              publication_start_date: "2022-01-28T12:00:00Z"
+              publication_end_date: "2022-03-28T12:00:00Z"
+              created_at: "2022-01-24T12:34:56Z"
+              updated_at: "2022-01-24T12:34:56Z"
+
+    BookCreateResponse:
+      description: Book created successfully
+      content:
+        application/json:
+          example:
+            id: 3
+            title: "New Book Title"
+            description: "Description of the new book"
+            author_id: 1
+            category_id: 1
+            publisher_id: 1
+            publication_status: "Draft"
+            publication_start_date: "2022-01-25T12:34:56Z"
+            publication_end_date: "2022-02-25T12:34:56Z"
+            created_at: "2022-01-25T12:34:56Z"
+            updated_at: "2022-01-25T12:34:56Z"
+
+    BookUpdateResponse:
+      description: Book updated successfully
+      content:
+        application/json:
+          example:
+            id: 3
+            title: "Updated Book Title"
+            description: "Updated description of the book"
+            author_id: 1
+            category_id: 1
+            publisher_id: 1
+            publication_status: "Published"
+            publication_start_date: "2022-01-28T12:00:00Z"
+            publication_end_date: "2022-03-28T12:00:00Z"
+            created_at: "2022-01-25T12:34:56Z"
+            updated_at: "2022-01-26T12:34:56Z"
+
+    BookDeleteResponse:
+      description: Book deleted successfully
+
   securitySchemes:
     token:
       type: http
@@ -252,6 +377,7 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
+  
   /authentication/user/{id}:
       get:
         tags:
@@ -280,6 +406,7 @@ paths:
                   $ref: '#/components/schemas/ApiResponse'
         security:
           - token: [ ]
+  
   /authentication/logout:
     post:
       tags:
@@ -296,7 +423,6 @@ paths:
       security:
         - token: [ ]
   
-
   /users/register:
     post:
       tags:
@@ -346,8 +472,6 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - token: [ ]
-
-    
 
   /users/update/{id}:
     put:
@@ -432,7 +556,6 @@ paths:
       security:
         - token: [ ]
 
-
   /users/delete:
     delete:
       tags:
@@ -500,6 +623,7 @@ paths:
               full_name: "Windy Max"
               age: 30
               phone_number: "1234567890"
+          
       responses:
         '201':
           description: Author created successfully
@@ -526,6 +650,7 @@ paths:
                     - phone_number
       security:
         - token: []
+  
   /authors/update/{id}:
     put:
       tags:
@@ -586,7 +711,7 @@ paths:
   /categories/create:
     post:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Create a new category
       operationId: createCategory
       requestBody:
@@ -626,7 +751,7 @@ paths:
   /categories:
     get:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Get all categories
       operationId: getAllCategories
       responses:
@@ -648,7 +773,7 @@ paths:
   /categories/update/{id}:
     put:
       tags:
-        - Book Categories
+        - Book Categories Management
       summary: Update category by ID
       operationId: updateCategoryById
       parameters:
@@ -683,5 +808,171 @@ paths:
             application/json:
               example:
                 $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /publishers/create:
+    post:
+      tags:
+        - Publisher Management
+      summary: Create a new publisher
+      operationId: createPublisher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePublisherRequest'
+            example:
+              name: "Publisher X"
+              address: "123 Main Street, City"
+      responses:
+        '201':
+          description: Publisher created successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /publishers:
+    get:
+      tags:
+        - Publisher Management
+      summary: Get all publishers
+      operationId: getAllPublishers
+      responses:
+        '200':
+          description: List of publishers
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Publishers not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /publishers/update/{id}:
+    put:
+      tags:
+        - Publisher Management
+      summary: Update publisher by ID
+      operationId: updatePublisherById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Publisher ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePublisherRequest'
+      responses:
+        '200':
+          description: Publisher updated successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Publisher not found
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - token: []
+
+  /books:
+    get:
+      summary: Get all books
+      tags:
+        - Book Management
+      responses:
+        '200':
+          $ref: '#/components/responses/BookListResponse'
+      security:
+        - token: []
+
+  /books/create:
+    post:
+      summary: Create a new book
+      tags:
+        - Book Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          $ref: '#/components/responses/BookCreateResponse'
+      security:
+        - token: []
+
+  /books/update/{id}:
+    put:
+      summary: Update a book
+      tags:
+        - Book Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to be updated
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          $ref: '#/components/responses/BookUpdateResponse'
+      security:
+        - token: []
+
+  /books/books:
+    delete:
+      summary: Delete a book
+      tags:
+        - Book Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to be deleted
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '204':
+          $ref: '#/components/responses/BookDeleteResponse'
       security:
         - token: []

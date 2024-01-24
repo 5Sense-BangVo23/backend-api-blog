@@ -18,10 +18,14 @@ return new class extends Migration
                 $table->unsignedBigInteger('blg_author_id')->nullable()->comment('Foreign key to link with authors'); // Foreign key to link with authors, nullable
                 $table->unsignedBigInteger('blg_category_id')->nullable()->comment('Foreign key to link with categories'); // Foreign key to link with categories, nullable
                 $table->unsignedBigInteger('blg_publisher_id')->nullable()->comment('Foreign key to link with publishers'); // Foreign key to link with publishers, nullable
+                $table->unsignedBigInteger('publication_status')->comment('Foreign key to link with publish_statuses');
+                $table->dateTime('publication_start_date')->nullable()->comment('Publication start date and time');
+                $table->dateTime('publication_end_date')->nullable()->comment('Publication end date and time');
                 $table->timestamps();
                 $table->foreign('blg_author_id')->references('id')->on('blg_authors');
                 $table->foreign('blg_category_id')->references('id')->on('blg_categories');
                 $table->foreign('blg_publisher_id')->references('id')->on('blg_publishers');
+                $table->foreign('publication_status')->references('id')->on('publish_statuses');
             });
     }
 

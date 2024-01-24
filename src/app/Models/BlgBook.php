@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BlgBook extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'blg_author_id', 'blg_category_id', 'blg_publisher_id'];
+    protected $fillable = ['title', 'description', 'blg_author_id', 'blg_category_id', 'blg_publisher_id', 'publication_status'];
 
 
      // Define relationship with BlgAuthor (Many-to-One)
@@ -27,5 +27,10 @@ class BlgBook extends Model
      public function publisher()
      {
          return $this->belongsTo(BlgPublisher::class, 'blg_publisher_id');
+     }
+
+     public function status()
+     {
+         return $this->belongsTo(PublishStatus::class, 'publication_status');
      }
 }
