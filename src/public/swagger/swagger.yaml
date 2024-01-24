@@ -24,6 +24,8 @@ tags:
     description: Manage book categories
   - name: Publisher Management
     description: Manage Publishers
+  - name: Book Management
+    description: Books Management
 
 components:
   schemas:
@@ -249,7 +251,93 @@ components:
         - name
         - address
 
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Sample Book 1"
+        description:
+          type: string
+          example: "This is a sample book"
+        blg_author_id:
+          type: integer
+          example: 1
+        blg_category_id:
+          type: integer
+          example: 1
+        blg_publisher_id:
+          type: integer
+          example: 1
+        publication_status:
+          type: string
+          example: "Draft"
 
+  responses:
+    BookListResponse:
+      description: Successful response for book list
+      content:
+        application/json:
+          example:
+            - id: 1
+              title: "Sample Book 1"
+              description: "This is a sample book"
+              author_id: 1
+              category_id: 1
+              publisher_id: 1
+              publication_status: "Draft"
+              publication_start_date: "2022-01-27T12:00:00Z"
+              publication_end_date: "2022-02-27T12:00:00Z"
+              created_at: "2022-01-23T12:34:56Z"
+              updated_at: "2022-01-23T12:34:56Z"
+            - id: 2
+              title: "Sample Book 2"
+              description: "Another sample book"
+              author_id: 2
+              category_id: 2
+              publisher_id: 2
+              publication_status: "Published"
+              publication_start_date: "2022-01-28T12:00:00Z"
+              publication_end_date: "2022-03-28T12:00:00Z"
+              created_at: "2022-01-24T12:34:56Z"
+              updated_at: "2022-01-24T12:34:56Z"
+
+    BookCreateResponse:
+      description: Book created successfully
+      content:
+        application/json:
+          example:
+            id: 3
+            title: "New Book Title"
+            description: "Description of the new book"
+            author_id: 1
+            category_id: 1
+            publisher_id: 1
+            publication_status: "Draft"
+            publication_start_date: "2022-01-25T12:34:56Z"
+            publication_end_date: "2022-02-25T12:34:56Z"
+            created_at: "2022-01-25T12:34:56Z"
+            updated_at: "2022-01-25T12:34:56Z"
+
+    BookUpdateResponse:
+      description: Book updated successfully
+      content:
+        application/json:
+          example:
+            id: 3
+            title: "Updated Book Title"
+            description: "Updated description of the book"
+            author_id: 1
+            category_id: 1
+            publisher_id: 1
+            publication_status: "Published"
+            publication_start_date: "2022-01-28T12:00:00Z"
+            publication_end_date: "2022-03-28T12:00:00Z"
+            created_at: "2022-01-25T12:34:56Z"
+            updated_at: "2022-01-26T12:34:56Z"
+
+    BookDeleteResponse:
+      description: Book deleted successfully
 
   securitySchemes:
     token:
@@ -817,17 +905,74 @@ paths:
       security:
         - token: []
 
+  /books:
+    get:
+      summary: Get all books
+      tags:
+        - Book Management
+      responses:
+        '200':
+          $ref: '#/components/responses/BookListResponse'
+      security:
+        - token: []
 
+  /books/create:
+    post:
+      summary: Create a new book
+      tags:
+        - Book Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          $ref: '#/components/responses/BookCreateResponse'
+      security:
+        - token: []
 
+  /books/update/{id}:
+    put:
+      summary: Update a book
+      tags:
+        - Book Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to be updated
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          $ref: '#/components/responses/BookUpdateResponse'
+      security:
+        - token: []
 
-
-
-
-
-
-
-
-
-
-
-
+  /books/books:
+    delete:
+      summary: Delete a book
+      tags:
+        - Book Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to be deleted
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '204':
+          $ref: '#/components/responses/BookDeleteResponse'
+      security:
+        - token: []
