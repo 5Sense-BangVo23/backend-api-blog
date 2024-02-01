@@ -12,10 +12,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LoginNotification;
+use Illuminate\Support\Str;
 
 class AuthenticationController extends Controller
 {
-
     public function authLogin(LoginRequest $request)
     {
         $userEmail = BlgUser::where(['email' => $request->email])->first();
@@ -31,6 +31,13 @@ class AuthenticationController extends Controller
             $accessToken = JWTAuth::fromUser($userEmail);
             $newAccessToken = \JwtUtils::createNewAccessToken($accessToken);
             $userEmail->update(['remember_token' => $accessToken]);
+
+             // Generate a new CSRF token manually
+             $csrfToken = $accessToken;
+
+             // Store the generated token in the session
+             session()->put('_token', $csrfToken);
+
             try {
                 Mail::to($userEmail->email)->send(new LoginNotification($userEmail, now()));
                 return response()->json($newAccessToken, 200);
@@ -42,6 +49,18 @@ class AuthenticationController extends Controller
             return response()->json(['info' => 'Please check your login information Password !'], 400);
         }
     }  
+
+    public function csrf()
+    {
+        // Generate a new CSRF token manually
+        $token = Str::random(500);
+
+        // Store the generated token in the session
+        session()->put('_token', $token);
+
+        // Return the CSRF token in the response
+        return response()->json(['csrf_token' => $token]);
+    }
 
 
     public function authLogout()

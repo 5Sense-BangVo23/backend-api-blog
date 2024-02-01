@@ -29,6 +29,14 @@ tags:
 
 components:
   schemas:
+
+    CsrfToken:
+      type: object
+      properties:
+        csrf_token:
+          type: string
+          example: "..."
+
     Jwt:
       type: object
       properties:
@@ -346,6 +354,8 @@ components:
       bearerFormat: JWT
 
 paths:
+
+
   /authentication/login:
     post:
       tags:
@@ -423,6 +433,22 @@ paths:
       security:
         - token: [ ]
   
+  /authentication/csrf:
+    get:
+      tags:
+        - Authentication
+      summary: Get CSRF token
+      operationId: getCsrfToken
+      responses:
+        '200':
+          description: CSRF token retrieved successfully
+          content:
+            application/json:
+              example:
+                $ref: '#/components/schemas/CsrfToken'
+      security:
+        - token: [ ]
+        
   /users/register:
     post:
       tags:

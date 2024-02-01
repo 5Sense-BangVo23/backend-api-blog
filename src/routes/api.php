@@ -23,6 +23,7 @@ Route::group([
     'controller' => AuthenticationController::class, 
     'middleware' => [],  
 ], function () {
+    Route::get('/csrf', [AuthenticationController::class, 'csrf']);
     Route::post('/login', [AuthenticationController::class, 'authLogin']);
     Route::get('/user/{userId}', [AuthenticationController::class, 'getUser'])->middleware(['auth:api']);
     Route::post('/logout', [AuthenticationController::class,'authLogout']);
