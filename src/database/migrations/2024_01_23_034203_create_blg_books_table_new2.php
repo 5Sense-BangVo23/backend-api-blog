@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('blg_books')) {
             Schema::create('blg_books', function (Blueprint $table) {
                 $table->id();
                 $table->string('title')->comment('Book title'); // Book title
@@ -22,11 +23,14 @@ return new class extends Migration
                 $table->dateTime('publication_start_date')->nullable()->comment('Publication start date and time');
                 $table->dateTime('publication_end_date')->nullable()->comment('Publication end date and time');
                 $table->timestamps();
+        
+                // Foreign keys
                 $table->foreign('blg_author_id')->references('id')->on('blg_authors');
                 $table->foreign('blg_category_id')->references('id')->on('blg_categories');
                 $table->foreign('blg_publisher_id')->references('id')->on('blg_publishers');
                 $table->foreign('publication_status')->references('id')->on('publish_statuses');
             });
+        }        
     }
 
     /**

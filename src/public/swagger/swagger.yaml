@@ -26,6 +26,18 @@ tags:
     description: Manage Publishers
   - name: Book Management
     description: Books Management
+  - name: Nail Polish Products Management
+    description: Manage Nail Polish Products
+  - name: Nail Polish Brands Management
+    description: Manage Nail Polish Brands
+  - name: Nail Polish Categories Management
+    description: Manage Nail Polish Categories
+  - name: Nail Polish Colors Management
+    description: Manage Nail Polish Colors
+  - name: Nail Polish Finishes Management
+    description: Manage Nail Polish Finishes
+  - name: Languages
+    description: Quản lý danh sách ngôn ngữ
 
 components:
   schemas:
@@ -281,6 +293,298 @@ components:
           type: string
           example: "Draft"
 
+    NailPolishProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Nail Polish A"
+        code:
+          type: string
+          example: "NP001"
+        brand_id:
+          type: integer
+          nullable: true
+          example: 2
+        category_id:
+          type: integer
+          nullable: true
+          example: 3
+        color_code:
+          type: string
+          nullable: true
+          example: "RED01"
+        color_name:
+          type: string
+          nullable: true
+          example: "Bright Red"
+        hex_color:
+          type: string
+          nullable: true
+          example: "#FF0000"
+        finish_type:
+          type: string
+          enum: [Shiny, Matte, Glitter]
+          nullable: true
+          example: "Shiny"
+        volume_ml:
+          type: number
+          format: float
+          nullable: true
+          example: 15.5
+        dry_time_seconds:
+          type: integer
+          nullable: true
+          example: 60
+        durability_days:
+          type: integer
+          nullable: true
+          example: 7
+        is_vegan:
+          type: boolean
+          example: true
+        is_cruelty_free:
+          type: boolean
+          example: false
+        is_toxic_free:
+          type: boolean
+          example: true
+        price_vnd:
+          type: integer
+          nullable: true
+          example: 120000
+        currency:
+          type: string
+          example: "VND"
+        manufacture_date:
+          type: string
+          format: date
+          nullable: true
+          example: "2024-01-01"
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+          example: "2025-01-01"
+        barcode:
+          type: string
+          nullable: true
+          example: "1234567890123"
+        usage_instructions:
+          type: string
+          nullable: true
+          example: "Apply evenly on nails."
+        warning_notes:
+          type: string
+          nullable: true
+          example: "Keep away from children."
+        storage_instructions:
+          type: string
+          nullable: true
+          example: "Store in a cool dry place."
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateNailPolishProductRequest:
+      type: object
+      required:
+        - name
+        - code
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: "Nail Polish A"
+        code:
+          type: string
+          maxLength: 50
+          example: "NP001"
+        brand_id:
+          type: integer
+          nullable: true
+        category_id:
+          type: integer
+          nullable: true
+        color_code:
+          type: string
+          maxLength: 20
+          nullable: true
+        color_name:
+          type: string
+          maxLength: 100
+          nullable: true
+        hex_color:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+          nullable: true
+        finish_type:
+          type: string
+          enum: [Shiny, Matte, Glitter]
+          nullable: true
+        volume_ml:
+          type: number
+          format: float
+          nullable: true
+        dry_time_seconds:
+          type: integer
+          nullable: true
+        durability_days:
+          type: integer
+          nullable: true
+        is_vegan:
+          type: boolean
+        is_cruelty_free:
+          type: boolean
+        is_toxic_free:
+          type: boolean
+        price_vnd:
+          type: integer
+          nullable: true
+        currency:
+          type: string
+          maxLength: 3
+        manufacture_date:
+          type: string
+          format: date
+          nullable: true
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+        barcode:
+          type: string
+          maxLength: 20
+          nullable: true
+        usage_instructions:
+          type: string
+          nullable: true
+        warning_notes:
+          type: string
+          nullable: true
+        storage_instructions:
+          type: string
+          nullable: true
+
+    UpdateNailPolishProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: "Nail Polish A"
+        code:
+          type: string
+          maxLength: 50
+          example: "NP001"
+        brand_id:
+          type: integer
+          nullable: true
+        category_id:
+          type: integer
+          nullable: true
+        color_code:
+          type: string
+          maxLength: 20
+          nullable: true
+        color_name:
+          type: string
+          maxLength: 100
+          nullable: true
+        hex_color:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+          nullable: true
+        finish_type:
+          type: string
+          enum: [Shiny, Matte, Glitter]
+          nullable: true
+        volume_ml:
+          type: number
+          format: float
+          nullable: true
+        dry_time_seconds:
+          type: integer
+          nullable: true
+        durability_days:
+          type: integer
+          nullable: true
+        is_vegan:
+          type: boolean
+        is_cruelty_free:
+          type: boolean
+        is_toxic_free:
+          type: boolean
+        price_vnd:
+          type: integer
+          nullable: true
+        currency:
+          type: string
+          maxLength: 3
+        manufacture_date:
+          type: string
+          format: date
+          nullable: true
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+        barcode:
+          type: string
+          maxLength: 20
+          nullable: true
+        usage_instructions:
+          type: string
+          nullable: true
+        warning_notes:
+          type: string
+          nullable: true
+        storage_instructions:
+          type: string
+          nullable: true
+
+    Language:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        code:
+          type: string
+          example: en
+        name:
+          type: string
+          example: English
+
+    LanguageCreate:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+          example: vi
+        name:
+          type: string
+          example: Vietnamese
+
+    LanguageUpdate:
+      type: object
+      properties:
+        code:
+          type: string
+          example: fr
+        name:
+          type: string
+          example: French
+
   responses:
     BookListResponse:
       description: Successful response for book list
@@ -346,6 +650,57 @@ components:
 
     BookDeleteResponse:
       description: Book deleted successfully
+
+    SuccessResponse:
+      description: Thực hiện thành công
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: "Thành công"
+              data:
+                type: object
+
+    CreatedResponse:
+      description: Tạo thành công
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: "Đã tạo thành công"
+              data:
+                type: object
+    
+    ErrorResponse:
+      description: Lỗi xảy ra
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: "Yêu cầu không hợp lệ"
+              errors:
+                type: array
+                items:
+                  type: string
+
 
   securitySchemes:
     token:
@@ -1002,3 +1357,195 @@ paths:
           $ref: '#/components/responses/BookDeleteResponse'
       security:
         - token: []
+
+  /nail-polish-products:
+    get:
+      summary: Lấy danh sách sản phẩm
+      tags:
+        - Nail Polish Products Management
+      security:
+        - token: []
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+    post:
+      summary: Tạo sản phẩm mới
+      tags:
+        - Nail Polish Products Management
+      security:
+        - token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NailPolishProduct'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResponse'
+        '422':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /nail-polish-products/{id}:
+    get:
+      summary: Lấy chi tiết sản phẩm theo ID
+      tags:
+        - Nail Polish Products Management
+      security:
+        - token: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Thành công"
+                  data:
+                    $ref: '#/components/schemas/NailPolishProduct'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Cập nhật sản phẩm theo ID
+      tags:
+        - Nail Polish Products Management
+      security:
+        - token: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NailPolishProduct'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '422':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Xóa sản phẩm theo ID
+      tags:
+        - Nail Polish Products Management
+      security:
+        - token: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /languages:
+    get:
+      tags:
+        - Languages
+      security:
+        - token: []
+      summary: Lấy danh sách tất cả ngôn ngữ
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+    post:
+      tags:
+        - Languages
+      security:
+        - token: []
+      summary: Tạo ngôn ngữ mới
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LanguageCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResponse'
+        '422':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /languages/{code}:
+    get:
+      tags:
+        - Languages
+      security:
+        - token: []
+      summary: Lấy chi tiết ngôn ngữ theo mã code
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+            example: en
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /languages/{id}:
+    put:
+      tags:
+        - Languages
+      security:
+        - token: []
+      summary: Cập nhật ngôn ngữ
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LanguageUpdate'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+    delete:
+      tags:
+        - Languages
+      security:
+        - token: []
+      summary: Xóa ngôn ngữ
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'

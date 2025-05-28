@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\BlgAuthorController;
 use App\Http\Controllers\Api\BlgPublisherController;
 use App\Http\Controllers\Api\BlgCategoryController;
 use App\Http\Controllers\Api\BlgBookController;
+use App\Http\Controllers\Api\LanguageController;
+use App\Http\Controllers\Api\NailPolishProductController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,8 +26,8 @@ Route::group([
     'controller' => AuthenticationController::class, 
     'middleware' => [],  
 ], function () {
-    Route::get('/csrf', [AuthenticationController::class, 'csrf']);
     Route::post('/login', [AuthenticationController::class, 'authLogin']);
+    Route::get('/csrf', [AuthenticationController::class, 'csrf']);
     Route::get('/user/{userId}', [AuthenticationController::class, 'getUser'])->middleware(['auth:api']);
     Route::post('/logout', [AuthenticationController::class,'authLogout']);
     Route::post('/send-message', [AuthenticationController::class, 'sendMessageInfo']);
@@ -87,3 +90,29 @@ Route::group([
     Route::put('/update/{id}', [BlgBookController::class, 'updateBook'])->middleware(['auth:api']);
 });
 
+
+Route::group([
+    'prefix' => 'nail-polish-products',
+    'controller' => NailPolishProductController::class,
+    'middleware' => ['auth:api', 'checkRoleAdmin']
+], function () {
+    Route::get('/', 'index');                // Lấy danh sách sản phẩm
+    Route::post('/', 'store');               // Tạo sản phẩm mới
+    Route::get('/{id}', 'show');             // Lấy chi tiết sản phẩm theo ID
+    Route::put('/{id}', 'update');           // Cập nhật sản phẩm theo ID
+    Route::delete('/{id}', 'destroy');       // Xóa sản phẩm theo ID
+});
+
+
+
+Route::group([
+    'prefix' => 'languages',
+    'middleware' => ['auth:api', 'checkRoleAdmin'],
+    'controller' => LanguageController::class
+], function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{code}', 'show'); // e.g. /languages/en
+    Route::put('/{id}', 'update');
+    Route::delete('/{id}', 'destroy');
+});

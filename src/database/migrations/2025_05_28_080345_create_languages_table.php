@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blg_users', function (Blueprint $table) {
+       Schema::create('languages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('avatar')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('code')->unique(); // e.g. "en", "vi", "fr"
+            $table->string('name');           // e.g. "English", "Vietnamese"
             $table->timestamps();
         });
+
     }
 
     /**
@@ -28,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
-        Schema::dropIfExists('blg_users');
+        Schema::dropIfExists('languages');
     }
 };

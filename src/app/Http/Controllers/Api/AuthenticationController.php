@@ -13,30 +13,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LoginNotification;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthenticationController extends Controller
 {
     public function authLogin(LoginRequest $request)
     {
         $userEmail = BlgUser::where(['email' => $request->email])->first();
-    
+
         if (!$userEmail) {
             return response()->json(['info' => 'Please check your input information again Email !'], 404);
         }
-    
+
         $userPassword = $userEmail->password;
-        $hashedPassword = \JwtUtils::generateHashedPassword($request->password);
-    
+
         if (Hash::check($request->password, $userPassword)) {
             $accessToken = JWTAuth::fromUser($userEmail);
             $newAccessToken = \JwtUtils::createNewAccessToken($accessToken);
             $userEmail->update(['remember_token' => $accessToken]);
 
-             // Generate a new CSRF token manually
-             $csrfToken = $accessToken;
-
-             // Store the generated token in the session
-             session()->put('_token', $csrfToken);
+            session()->put('_token', $accessToken);
 
             try {
                 Mail::to($userEmail->email)->send(new LoginNotification($userEmail, now()));
@@ -44,30 +40,38 @@ class AuthenticationController extends Controller
             } catch (\Exception $e) {
                 \Log::error('Error sending login notification: ' . $e->getMessage());
             }
-            
+
         } else {
             return response()->json(['info' => 'Please check your login information Password !'], 400);
         }
-    }  
-
+    }
+    
     public function csrf()
     {
-        // Generate a new CSRF token manually
-        $token = Str::random(500);
-
-        // Store the generated token in the session
+        $token = Str::random(255);
         session()->put('_token', $token);
-
-        // Return the CSRF token in the response
         return response()->json(['csrf_token' => $token]);
     }
 
+    // public function authLogout()
+    // {
+    //     Auth::logout();
+    //     return response()->json(['info' => 'User logged out successfully']);
+    // }
 
-    public function authLogout()
-    {
-        Auth::logout();
-        return response()->json(['info' => 'User logged out successfully']);
+   public function authLogout()
+{
+    try {
+        JWTAuth::invalidate(JWTAuth::getToken());
+    } catch (JWTException $e) {
+        // Nếu token invalid hoặc hết hạn thì vẫn xem như logout thành công
+        // hoặc bạn có thể log lỗi ở đây
     }
+    return response()->json(['info' => 'User logged out successfully']);
+}
+
+
+
 
     public function getUser($userId)
     {
