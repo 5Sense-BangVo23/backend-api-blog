@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\Messages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\SendMessageRequest;
@@ -19,33 +20,69 @@ class AuthenticationController extends Controller
 {
     public function authLogin(LoginRequest $request)
     {
-        $userEmail = BlgUser::where(['email' => $request->email])->first();
+        $steps = [
+            'step' => '',
+            'progress' => 0,
+            'status' => 'processing'
+        ];
 
+        $userEmail = BlgUser::where(['email' => $request->email])->first();
         if (!$userEmail) {
-            return response()->json(['info' => 'Please check your input information again Email !'], 404);
+            return response()->json([
+                'step' => 'check_email',
+                'progress' => 25,
+                'status' => 'failed',
+                'message' => 'Please check your input information again Email!'
+            ], 404);
         }
+
+        $steps['step'] = 'check_email';
+        $steps['progress'] = 25;
 
         $userPassword = $userEmail->password;
+        if (!Hash::check($request->password, $userPassword)) {
+            return response()->json([
+                'step' => 'check_password',
+                'progress' => 50,
+                'status' => 'failed',
+                'message' => 'Please check your login information Password!'
+            ], 400);
+        }
 
-        if (Hash::check($request->password, $userPassword)) {
-            $accessToken = JWTAuth::fromUser($userEmail);
-            $newAccessToken = \JwtUtils::createNewAccessToken($accessToken);
-            $userEmail->update(['remember_token' => $accessToken]);
+        $steps['step'] = 'check_password';
+        $steps['progress'] = 50;
 
-            session()->put('_token', $accessToken);
+        $accessToken = JWTAuth::fromUser($userEmail);
+        $newAccessToken = \JwtUtils::createNewAccessToken($accessToken);
+        $userEmail->update(['remember_token' => $accessToken]);
+        session()->put('_token', $accessToken);
 
-            try {
-                Mail::to($userEmail->email)->send(new LoginNotification($userEmail, now()));
-                return response()->json($newAccessToken, 200);
-            } catch (\Exception $e) {
-                \Log::error('Error sending login notification: ' . $e->getMessage());
-            }
+        $steps['step'] = 'token_created';
+        $steps['progress'] = 75;
 
-        } else {
-            return response()->json(['info' => 'Please check your login information Password !'], 400);
+        try {
+            Mail::to($userEmail->email)->send(new LoginNotification($userEmail, now()));
+            $steps['step'] = 'email_sent';
+            $steps['progress'] = 100;
+            $steps['status'] = 'success';
+            $steps['access_token'] = $newAccessToken;
+
+            return response()->json($steps, 200);
+
+        } catch (\Exception $e) {
+            \Log::error('Error sending login notification: ' . $e->getMessage());
+
+            return response()->json([
+                'step' => 'email_sent',
+                'progress' => 100,
+                'status' => 'partial_success',
+                'access_token' => $newAccessToken,
+                'message' => 'Login success but failed to send email notification.'
+            ], 200);
         }
     }
-    
+
+
     public function csrf()
     {
         $token = Str::random(255);
@@ -59,16 +96,16 @@ class AuthenticationController extends Controller
     //     return response()->json(['info' => 'User logged out successfully']);
     // }
 
-   public function authLogout()
-{
-    try {
-        JWTAuth::invalidate(JWTAuth::getToken());
-    } catch (JWTException $e) {
-        // Nếu token invalid hoặc hết hạn thì vẫn xem như logout thành công
-        // hoặc bạn có thể log lỗi ở đây
+    public function authLogout()
+    {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (JWTException $e) {
+        }
+    return response()->json(
+        [ 'message' => Messages::USER_LOGGED_OUT ],
+    );
     }
-    return response()->json(['info' => 'User logged out successfully']);
-}
 
 
 
