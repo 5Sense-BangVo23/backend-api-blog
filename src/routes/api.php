@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BlgAuthorController;
 use App\Http\Controllers\Api\BlgPublisherController;
 use App\Http\Controllers\Api\BlgCategoryController;
 use App\Http\Controllers\Api\BlgBookController;
+use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\NailPolishProductController;
 
@@ -60,7 +61,7 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'categories',
+    'prefix' => 'category',
     'controller' => BlgCategoryController::class,
     'middleware' => ['auth:api', 'checkRoleAdmin']
 ], function ($router) {
@@ -90,6 +91,12 @@ Route::group([
     Route::put('/update/{id}', [BlgBookController::class, 'updateBook'])->middleware(['auth:api']);
 });
 
+Route::group([
+    'prefix' => 'brands',
+    'middleware' => ['auth:api', 'checkRoleAdmin']
+], function () {
+    Route::get('/', [BrandController::class, 'index']);
+});
 
 Route::group([
     'prefix' => 'nail-polish-products',

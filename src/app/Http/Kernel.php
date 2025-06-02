@@ -42,7 +42,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            'throttle:api'
+            'throttle:api',
         ],
     ];
 
@@ -69,8 +69,8 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         'checkRoleAdmin' => \App\Http\Middleware\CheckRoleAdmin::class,
+        
     ];
-
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
