@@ -5,6 +5,8 @@ use Illuminate\Support\Str;
 use App\Models\BlgUser;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\Authentication\JwtResource;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtService{
 
@@ -29,6 +31,16 @@ class JwtService{
     {
         $jwt = JwtResource::make($token);
         return  $jwt;
+    }
+
+      public function refreshToken($oldToken)
+    {
+        try {
+            $newToken = JWTAuth::refresh($oldToken);
+            return JwtResource::make($newToken);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Cannot refresh token'], 401);
+        }
     }
 }
 

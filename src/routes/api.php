@@ -34,6 +34,8 @@ Route::group([
     Route::post('/send-message', [AuthenticationController::class, 'sendMessageInfo']);
 });
 
+Route::post('/authentication/auth/refresh', [AuthenticationController::class, 'refreshToken']);
+
 
 // User management routes
 
@@ -92,12 +94,14 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'brands',
+    'prefix' => 'brand',
+    'controller' => BrandController::class,
     'middleware' => ['auth:api', 'checkRoleAdmin']
-], function () {
-    Route::get('/', [BrandController::class, 'index']);
+], function ($router) {
+    Route::post('/create', [BrandController::class, 'createBrand'])->middleware(['auth:api']);
+    Route::get('/', [BrandController::class, 'getAllBrand'])->middleware(['auth:api']);
+    Route::put('/update/{id}', [BrandController::class, 'updateBrand'])->middleware(['auth:api']);
 });
-
 Route::group([
     'prefix' => 'nail-polish-products',
     'controller' => NailPolishProductController::class,
@@ -112,6 +116,9 @@ Route::group([
 
 
 
+
+
+
 Route::group([
     'prefix' => 'languages',
     'middleware' => ['auth:api', 'checkRoleAdmin'],
@@ -123,3 +130,5 @@ Route::group([
     Route::put('/{id}', 'update');
     Route::delete('/{id}', 'destroy');
 });
+;
+

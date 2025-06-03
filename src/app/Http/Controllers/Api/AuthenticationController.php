@@ -120,6 +120,16 @@ class AuthenticationController extends Controller
         return response()->json(['data' => $user], 200);
     }
 
+    public function refreshToken(Request $request)
+    {
+        try {
+            $token = JWTAuth::refresh(JWTAuth::getToken());
+            return response()->json(['access_token' => $token], 200);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not refresh token'], 500);
+        }
+    }
+
 
     public function sendMessageInfo(SendMessageRequest $request){
         $msg = $request->message;
