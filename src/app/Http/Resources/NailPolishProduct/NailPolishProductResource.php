@@ -3,7 +3,7 @@
 namespace App\Http\Resources\NailPolishProduct;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Carbon\Carbon;
 class NailPolishProductResource extends JsonResource
 {
     /**
@@ -32,8 +32,8 @@ class NailPolishProductResource extends JsonResource
             'is_toxic_free'     => $this->is_toxic_free,
             'price_vnd'         => $this->price_vnd,
             'currency'          => $this->currency,
-            'manufacture_date'  => $this->manufacture_date ? $this->manufacture_date->toDateString() : null,
-            'expiry_date'       => $this->expiry_date ? $this->expiry_date->toDateString() : null,
+            'manufacture_date' => $this->manufacture_date ? Carbon::parse($this->manufacture_date)->toDateString() : null,
+            'expiry_date'      => $this->expiry_date ? Carbon::parse($this->expiry_date)->toDateString() : null,
             'barcode'           => $this->barcode,
             'usage_instructions'=> $this->usage_instructions,
             'warning_notes'     => $this->warning_notes,

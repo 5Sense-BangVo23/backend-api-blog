@@ -29,7 +29,7 @@ class CreateNailPolishProductRequest extends FormRequest
             'color_code'         => 'nullable|string|max:20',
             'color_name'         => 'nullable|string|max:100',
             'hex_color'          => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'], // mã hex #xxxxxx
-            'finish_type'        => 'nullable|in:Shiny,Matte,Glitter',
+            'finish_type'        => 'nullable|in:shiny,matte,glitter',
             'volume_ml'          => 'nullable|numeric|min:0',
             'dry_time_seconds'   => 'nullable|integer|min:0',
             'durability_days'    => 'nullable|integer|min:0',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Builders\NailPolishProductBuilder;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateNailPolishProductRequest;
 use App\Http\Requests\UpdateNailPolishProductRequest;
@@ -42,12 +43,39 @@ class NailPolishProductController extends Controller
     }
 
     // POST /api/nail-polish-products
-    public function store(CreateNailPolishProductRequest $request): JsonResponse
+    public function store(CreateNailPolishProductRequest $request)
     {
-        $product = $this->service->create($request->validated());
+        $data = $request->validated();
 
-        return $this->apiResponse(new NailPolishProductResource($product), 201);
+        $builder = (new NailPolishProductBuilder())
+            ->setName($data['name'])
+            ->setCode($data['code'])
+            ->setBrandId($data['brand_id'] ?? null)
+            ->setCategoryId($data['category_id'] ?? null)
+            ->setColorCode($data['color_code'] ?? null)
+            ->setColorName($data['color_name'] ?? null)
+            ->setHexColor($data['hex_color'] ?? null)
+            ->setFinishType($data['finish_type'] ?? null)
+            ->setVolumeMl($data['volume_ml'] ?? null)
+            ->setDryTimeSeconds($data['dry_time_seconds'] ?? null)
+            ->setDurabilityDays($data['durability_days'] ?? null)
+            ->setIsVegan($data['is_vegan'] ?? false)
+            ->setIsCrueltyFree($data['is_cruelty_free'] ?? false)
+            ->setIsToxicFree($data['is_toxic_free'] ?? false)
+            ->setPriceVnd($data['price_vnd'] ?? null)
+            ->setCurrency($data['currency'])
+            ->setManufactureDate($data['manufacture_date'] ?? null)
+            ->setExpiryDate($data['expiry_date'] ?? null)
+            ->setBarcode($data['barcode'] ?? null)
+            ->setUsageInstructions($data['usage_instructions'] ?? null)
+            ->setWarningNotes($data['warning_notes'] ?? null)
+            ->setStorageInstructions($data['storage_instructions'] ?? null);
+
+        $product = $this->service->create($builder);
+
+        return response()->json($product, 201);
     }
+
 
     // PUT/PATCH /api/nail-polish-products/{id}
     public function update(UpdateNailPolishProductRequest $request, int $id): JsonResponse
