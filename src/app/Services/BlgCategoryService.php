@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\BlgCategory;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,11 +18,11 @@ class BlgCategoryService
      * Tạo mới category
      *
      * @param array $data
-     * @return BlgCategory
+     * @return Category
      */
-    public function createCategory(array $data): BlgCategory
+    public function createCategory(array $data): Category
     {
-        return BlgCategory::create($data);
+        return Category::create($data);
     }
 
     /**
@@ -32,7 +32,7 @@ class BlgCategoryService
      */
     public function getAllCategories(): Collection
     {
-        return BlgCategory::select($this->selectFields)->get();
+        return Category::select($this->selectFields)->get();
     }
 
     /**
@@ -43,20 +43,20 @@ class BlgCategoryService
      */
     public function getAllCategoriesPaginated(int $perPage = 15): LengthAwarePaginator
     {
-        return BlgCategory::select($this->selectFields)->paginate($perPage);
+        return Category::select($this->selectFields)->paginate($perPage);
     }
 
     /**
      * Lấy category theo id, chỉ lấy các trường cần thiết, ném exception nếu không tìm thấy
      *
      * @param int $cateId
-     * @return BlgCategory
+     * @return Category
      *
      * @throws ModelNotFoundException
      */
-    public function getCategoryById(int $cateId): BlgCategory
+    public function getCategoryById(int $cateId): Category
     {
-        return BlgCategory::select($this->selectFields)->findOrFail($cateId);
+        return Category::select($this->selectFields)->findOrFail($cateId);
     }
 
     /**
@@ -64,11 +64,11 @@ class BlgCategoryService
      *
      * @param int $cateId
      * @param array $data
-     * @return BlgCategory
+     * @return Category
      *
      * @throws ModelNotFoundException
      */
-    public function updateCategory(int $cateId, array $data): BlgCategory
+    public function updateCategory(int $cateId, array $data): Category
     {
         $category = $this->getCategoryById($cateId);
         $category->update($data);
@@ -84,6 +84,6 @@ class BlgCategoryService
      */
     public function deleteCategory(int $cateId): bool
     {
-        return (bool) BlgCategory::destroy($cateId);
+        return (bool) Category::destroy($cateId);
     }
 }
