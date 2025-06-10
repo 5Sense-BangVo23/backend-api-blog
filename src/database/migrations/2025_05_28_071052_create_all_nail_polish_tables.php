@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('color_code', 20)->nullable();
             $table->string('color_name', 100)->nullable();
 
-            $table->enum('finish_type', ['Shiny', 'Matte', 'Glitter'])->nullable();
+            $table->enum('finish_type', ['bóng', 'lì', 'nhũ']);
             $table->decimal('volume_ml', 5, 2)->nullable();
             $table->integer('dry_time_seconds')->nullable();
             $table->integer('durability_days')->nullable();
