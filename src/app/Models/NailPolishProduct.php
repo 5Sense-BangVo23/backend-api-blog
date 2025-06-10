@@ -11,7 +11,7 @@ class NailPolishProduct extends Model
 
 
     protected $fillable = [
-        'name','code', 'brand_id', 'category_id', 'color_code', 'color_name', 'hex_color',
+        'name','code', 'brand_id', 'category_id', 'color_code', 'color_name', 
         'finish_type', 'volume_ml', 'dry_time_seconds', 'durability_days',
         'is_vegan', 'is_cruelty_free', 'is_toxic_free', 'price_vnd', 'currency',
         'manufacture_date', 'expiry_date', 'barcode',
@@ -28,13 +28,4 @@ class NailPolishProduct extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function ingredients()
-    {
-        return $this->belongsToMany(Ingredient::class, 'nail_polish_ingredient');
-    }
-
-    public function images()
-    {
-        return $this->hasMany(NailPolishImage::class, 'nail_polish_id');
-    }
 }

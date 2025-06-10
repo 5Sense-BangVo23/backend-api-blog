@@ -43,12 +43,6 @@ class NailPolishProductBuilder
         return $this;
     }
 
-    public function setHexColor(?string $hexColor): self
-    {
-        $this->data['hex_color'] = $hexColor;
-        return $this;
-    }
-
     public function setFinishType(?string $finishType): self
     {
         $this->data['finish_type'] = $finishType;

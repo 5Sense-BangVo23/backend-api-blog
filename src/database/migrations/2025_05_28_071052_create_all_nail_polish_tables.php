@@ -26,13 +26,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 3. Bảng ingredients
-        Schema::create('ingredients', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
 
         // 4. Bảng nail_polish_products
         Schema::create('nail_polish_products', function (Blueprint $table) {
@@ -47,7 +40,6 @@ return new class extends Migration
 
             $table->string('color_code', 20)->nullable();
             $table->string('color_name', 100)->nullable();
-            $table->char('hex_color', 7)->nullable();
 
             $table->enum('finish_type', ['Shiny', 'Matte', 'Glitter'])->nullable();
             $table->decimal('volume_ml', 5, 2)->nullable();
@@ -71,39 +63,11 @@ return new class extends Migration
 
             $table->timestamps();
         });
-
-        // 5. Bảng nail_polish_images
-        Schema::create('nail_polish_images', function (Blueprint $table) {
-            $table->id();
-
-            $table->foreignId('nail_polish_id')->constrained('nail_polish_products')
-                ->onDelete('cascade')->cascadeOnUpdate();
-
-            $table->string('image_url');
-            $table->string('alt_text')->nullable();
-            $table->timestamps();
-        });
-
-        // 6. Bảng nail_polish_ingredient (bảng trung gian)
-        Schema::create('nail_polish_ingredient', function (Blueprint $table) {
-            $table->id();
-
-            $table->foreignId('nail_polish_id')->constrained('nail_polish_products')
-                ->onDelete('cascade')->cascadeOnUpdate();
-
-            $table->foreignId('ingredient_id')->constrained('ingredients')
-                ->onDelete('cascade')->cascadeOnUpdate();
-
-            $table->timestamps();
-        });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('nail_polish_ingredient');
-        Schema::dropIfExists('nail_polish_images');
         Schema::dropIfExists('nail_polish_products');
-        Schema::dropIfExists('ingredients');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('brands');
     }
