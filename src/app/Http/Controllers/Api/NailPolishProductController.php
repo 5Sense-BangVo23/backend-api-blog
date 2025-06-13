@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateNailPolishProductRequest;
 use App\Http\Requests\UpdateNailPolishProductRequest;
 use App\Http\Resources\NailPolishProduct\NailPolishProductResource;
+use App\Models\NailPolishProduct;
+use App\Services\ImageUploadService;
 use App\Services\NailPolishProductService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -17,10 +19,14 @@ class NailPolishProductController extends Controller
     use ApiResponseTrait;
 
     protected NailPolishProductService $service;
+    protected ImageUploadService $imageUploadService;
 
-    public function __construct(NailPolishProductService $service)
-    {
-        $this->service = $service;
+    public function __construct(
+        NailPolishProductService $productService,
+        ImageUploadService $imageUploadService
+    ) {
+        $this->service = $productService;
+        $this->imageUploadService = $imageUploadService;
     }
 
     // GET /api/nail-polish-products
@@ -54,7 +60,6 @@ class NailPolishProductController extends Controller
             ->setCategoryId($data['category_id'] ?? null)
             ->setColorCode($data['color_code'] ?? null)
             ->setColorName($data['color_name'] ?? null)
-            ->setHexColor($data['hex_color'] ?? null)
             ->setFinishType($data['finish_type'] ?? null)
             ->setVolumeMl($data['volume_ml'] ?? null)
             ->setDryTimeSeconds($data['dry_time_seconds'] ?? null)
@@ -100,4 +105,27 @@ class NailPolishProductController extends Controller
 
         return $this->apiResponse(null, 200);
     }
+
+    public function uploadImages(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'images.*' => 'required|image|max:5120',
+        ]);
+
+        if (!$request->hasFile('images')) {
+            return response()->json(['message' => 'Không có file ảnh được gửi'], 422);
+        }
+
+        $product = NailPolishProduct::findOrFail($id);
+        $uploadedUrls = $this->imageUploadService->uploadMultiple($request->file('images'));
+
+        $product = $this->service->saveImagesUrls($product, $uploadedUrls);
+
+        return response()->json([
+            'message' => 'Upload thành công',
+            'images_urls' => json_decode($product->images_urls, true),
+        ]);
+    }
+
+    
 }

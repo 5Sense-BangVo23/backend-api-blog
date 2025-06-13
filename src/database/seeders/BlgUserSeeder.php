@@ -24,7 +24,7 @@ class BlgUserSeeder extends Seeder
         // Create admin user
         BlgUser::create([
             'name' => 'admin',
-            'email' => 'bangvo.5sense.vn@gmail.com',
+            'email' => 'admin@example.com',
             'password' => Hash::make('admin'),
         ])->roles()->attach($roleAdmin->id);
     }

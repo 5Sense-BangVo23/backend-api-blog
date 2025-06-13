@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ImageOrUrl;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateNailPolishProductRequest extends FormRequest
@@ -23,6 +24,7 @@ class CreateNailPolishProductRequest extends FormRequest
     {
         return [
             'name'               => 'required|string|max:255',
+            'images_urls.*'      => ['required', new ImageOrUrl()],
             'code'               => 'required|string|max:50|unique:nail_polish_products,code',
             'brand_id'           => 'nullable|exists:brands,id',
             'category_id'        => 'nullable|exists:categories,id',

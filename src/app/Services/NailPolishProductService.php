@@ -51,4 +51,14 @@ class NailPolishProductService
         }
         return $product->delete();
     }
+
+     public function saveImagesUrls(NailPolishProduct $product, array $newUrls): NailPolishProduct
+    {
+        $existingUrls = $product->images_urls ? json_decode($product->images_urls, true) : [];
+        $allUrls = array_merge($existingUrls, $newUrls);
+        $product->images_urls = json_encode($allUrls);
+        $product->save();
+
+        return $product;
+    }
 }

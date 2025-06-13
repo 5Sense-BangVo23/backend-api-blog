@@ -11,7 +11,8 @@ class NailPolishProduct extends Model
 
 
     protected $fillable = [
-        'name','code', 'brand_id', 'category_id', 'color_code', 'color_name', 
+        'name','images_urls',
+        'code', 'brand_id', 'category_id', 'color_code', 'color_name', 
         'finish_type', 'volume_ml', 'dry_time_seconds', 'durability_days',
         'is_vegan', 'is_cruelty_free', 'is_toxic_free', 'price_vnd', 'currency',
         'manufacture_date', 'expiry_date', 'barcode',

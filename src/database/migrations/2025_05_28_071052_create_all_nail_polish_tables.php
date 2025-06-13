@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('color_code', 20)->nullable();
             $table->string('color_name', 100)->nullable();
 
-            $table->enum('finish_type', ['bóng', 'lì', 'nhũ']);
+            $table->enum('finish_type', ['shiny','matte','glitter']);
             $table->decimal('volume_ml', 5, 2)->nullable();
             $table->integer('dry_time_seconds')->nullable();
             $table->integer('durability_days')->nullable();
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->text('usage_instructions')->nullable();
             $table->text('warning_notes')->nullable();
             $table->text('storage_instructions')->nullable();
-
+            $table->text('images_urls')->nullable(); // JSON array of image URLs
             $table->timestamps();
         });
     }

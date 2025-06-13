@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\BlgPublisherController;
 use App\Http\Controllers\Api\BlgCategoryController;
 use App\Http\Controllers\Api\BlgBookController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\CloudinaryController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\NailPolishProductController;
 
@@ -112,6 +113,8 @@ Route::group([
     Route::get('/{id}', 'show');             // Lấy chi tiết sản phẩm theo ID
     Route::put('/{id}', 'update');           // Cập nhật sản phẩm theo ID
     Route::delete('/{id}', 'destroy');       // Xóa sản phẩm theo ID
+
+    Route::post('/{id}/upload-images', 'uploadImages'); // Upload nhiều ảnh cho sản phẩm
 });
 
 
@@ -130,5 +133,16 @@ Route::group([
     Route::put('/{id}', 'update');
     Route::delete('/{id}', 'destroy');
 });
-;
+
+
+Route::group([
+    'prefix' => 'cloudinary',
+    'controller' => CloudinaryController::class,
+    'middleware' => ['auth:api', 'checkRoleAdmin']
+], function () {
+    Route::post('/upload', 'upload');
+    Route::get('/files', 'list');
+    Route::get('/files/{publicId}', 'get');
+    Route::delete('/files/{publicId}', 'delete');
+});
 

@@ -17,12 +17,12 @@ class NailPolishProductResource extends JsonResource
         return [
             'id'                => $this->id,
             'name'              => $this->name,
+            'images_urls'       => $this->images_urls,
             'code'              => $this->code,
             'brand_id'          => $this->brand_id,
             'category_id'       => $this->category_id,
             'color_code'        => $this->color_code,
             'color_name'        => $this->color_name,
-            'hex_color'         => $this->hex_color,
             'finish_type'       => $this->finish_type,
             'volume_ml'         => $this->volume_ml,
             'dry_time_seconds'  => $this->dry_time_seconds,
