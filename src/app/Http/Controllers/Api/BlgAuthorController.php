@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Author\CreateBlgAuthorRequest;
 use App\Http\Requests\Author\UpdateBlgAuthorRequest;
 use App\Http\Resources\Author\BlgAuthorResource;
